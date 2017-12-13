@@ -3,7 +3,9 @@ package org.cboard.services.persist.excel;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeUtil;
 
@@ -61,7 +63,7 @@ public class TableXlsProcesser extends XlsProcesser {
                     Cell cell = row.createCell(j);
                     if ("header_key".equals(property) || "header_empty".equals(property)) {
                         cell.setCellStyle(context.getTableStyle());
-                    } else if ("data".equals(property)|| "column_key".equals(property)) {
+                    } else if ("data".equals(property) || "column_key".equals(property)) {
                         cell.setCellStyle(context.gettStyle());
                     }
                     if (j == colStart) {
@@ -73,7 +75,16 @@ public class TableXlsProcesser extends XlsProcesser {
                                 cell.setCellValue(cData.getDoubleValue("raw"));
                             }
                         } else {
-                            cell.setCellValue(cData.getString("data"));
+                            //modified by wbc start 2017-07-14 start（不让纵向的数据进行合并）
+                            String tmp = cData.getString("raw");
+                            if (tmp == null) {//表示这种数据被我改过了，所以要特殊处理（data有值，没有对应的raw）
+                                cell.setCellValue(cData.getString("data"));
+                            } else {
+                                cell.setCellValue(cData.getDoubleValue("raw"));
+                            }
+                            //modified by wbc start 2017-07-14 end
+//                          这个是原来的
+//                          cell.setCellValue(cData.getDoubleValue("raw"));
                         }
                     }
                 }

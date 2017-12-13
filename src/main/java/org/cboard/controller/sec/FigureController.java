@@ -37,7 +37,7 @@ public class FigureController {
 
     @Autowired
     private DocDao docDao;
-    @Autowired
+//    @Autowired  （kylin的先不用了）
     private KylinDao kylinDao;
 
     @Autowired

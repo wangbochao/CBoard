@@ -118,7 +118,8 @@
                     SELECT res_id
                       FROM dashboard_user_role ur
                       LEFT JOIN dashboard_role_res rr ON ur.role_id = rr.role_id
-                     WHERE ur.user_id = #{0} AND rr.res_type = 'board' AND rr.permission LIKE #{2})
+                     <!--WHERE ur.user_id = #{0} AND rr.res_type = 'board' AND rr.permission LIKE #{2}-->
+                     )
                  )
     </select>
 

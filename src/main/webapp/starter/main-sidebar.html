@@ -80,6 +80,44 @@
                 <li ui-sref-active="active" ng-if="isShowMenu('config.role')">
                     <a ui-sref="config.role"><i class="fa fa-share-alt"></i>{{'SIDEBAR.SHARE_RESOURCE'|translate}}</a>
                 </li>
+                <!--自定义添加-->
+                <li ui-sref-active="active" ng-if="isShowMenu('config.route')">
+                    <a ui-sref="config.route"><i class="fa fa-sitemap"></i>{{'SIDEBAR.EVENT_ANALYSIS'|translate}}</a>
+                </li>
+                <li ui-sref-active="active" ng-if="isShowMenu('config.newfunnel')">
+                    <a ui-sref="config.newfunnel"><i class="fa fa-plus"></i>{{'SIDEBAR.CREATE_FUNNEL'|translate}}</a>
+                </li>
+
+                <li ui-sref-active="active" ng-if="isShowMenu('config.customFunnel')">
+                    <a ui-sref="config.customFunnel"><i class="fa fa-sort-amount-desc"></i>{{'SIDEBAR.FUNNEL_ANALYSIS'|translate}}</a>
+                </li>
+                <!--<li ui-sref-active="active" ng-if="isShowMenu('config.path_analysis')">-->
+                <!--<a ui-sref="config.path_analysis"><i class="fa fa-sort-amount-desc"></i>{{'SIDEBAR.PATH_ANALYSIS'|translate}}</a>-->
+                <!--</li>-->
+
+
+
+
+                <!-- <li ui-sref-active="active">
+                     <a ui-sref="config.newfunnel"><i class="fa fa-plus"></i>新建漏斗</a>
+                 </li>
+
+                 <li ui-sref-active="active">
+                     <a ui-sref="config.customFunnel"><i class="fa fa-sort-amount-desc"></i>漏斗分析</a>
+                 </li>-->
+                <!--<li ui-sref-active="active">-->
+                <!--<a ui-sref="config.newroute"><i class="fa fa-plus"></i>新建路径</a>-->
+                <!--</li>-->
+                <!--<li ui-sref-active="active">-->
+                <!--<a ui-sref="config.event"><i class="fa fa-sitemap"></i>路径分析</a>-->
+                <!--</li>-->
+                <!-- hkl 6.19注释掉-->
+                <!--<li ui-sref-active="active">-->
+                <!--<a ui-sref="config.route"><i class="fa fa-server"></i>事件分析</a>-->
+                <!--</li>-->
+                <!--<li ui-sref-active="active">-->
+                <!--<a ui-sref="config.path_analysis"><i class="fa fa-plus"></i>路径分析</a>-->
+                <!--</li>-->
             </ul>
         </li>
         <!-- Admin -->

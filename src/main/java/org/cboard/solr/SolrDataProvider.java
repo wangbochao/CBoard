@@ -77,6 +77,17 @@ public class SolrDataProvider extends DataProvider implements Aggregatable, Init
 
     private static Map<String, SolrServerPoolFactory> poolMap;
 
+    @Override
+    public int resultCount(Map<String, String> dataSource, Map<String, String> query) throws Exception {
+        //这个用不到，仅仅是位0.2版本的代码服务add by wbc
+        return 0;
+    }
+
+    @Override
+    public String[][] getData(Map<String, String> dataSource, Map<String, String> query) throws Exception {
+        //这个用不到，仅仅是位0.2版本的代码服务add by wbc
+        return new String[0][];
+    }
 
     private synchronized SolrServerPoolFactory getSolrServerPoolFactory(String solrServers, String collectionName) {
         String poolKey = getPoolKey(solrServers, collectionName);
