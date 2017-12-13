@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,6 +56,7 @@ public abstract class DataProvider {
             return false;
         }
     }
+
     /**
      * get the aggregated data by user's widget designer
      *
@@ -100,7 +100,8 @@ public abstract class DataProvider {
                 .map(member -> {
                     return Objects.isNull(member) ? NULL_STRING : member;
                 })
-                .sorted(new NaturalOrderComparator()).limit(1000).toArray(String[]::new);
+                .sorted(new NaturalOrderComparator()).limit(2000).toArray(String[]::new);
+//                .sorted(new NaturalOrderComparator()).limit(1000).toArray(String[]::new);//界面上显示更多的内容
     }
 
     public final String[] getColumn(boolean reload) throws Exception {
@@ -193,6 +194,18 @@ public abstract class DataProvider {
         return result;
     }
 
+    /**
+     * 获取结果集（结果集是一个二维数组）
+     * 0.2版本，专门为wbc服务
+     *
+     * @param dataSource
+     * @param query
+     * @return
+     * @throws Exception
+     */
+    abstract public String[][] getData(Map<String, String> dataSource, Map<String, String> query) throws Exception;
+
+
     abstract public String[][] getData() throws Exception;
 
     public void test() throws Exception {
@@ -255,5 +268,16 @@ public abstract class DataProvider {
         }
         return configComponent;
     }
+
+    /**
+     * 获取结果集的行数
+     *
+     * @param dataSource
+     * @param query
+     * @return
+     * @throws Exception
+     */
+    abstract public int resultCount(Map<String, String> dataSource, Map<String, String> query) throws Exception;
+
 
 }

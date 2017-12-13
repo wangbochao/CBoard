@@ -11,7 +11,9 @@ import org.cboard.dataprovider.aggregator.Aggregatable;
 import org.cboard.dataprovider.annotation.DatasourceParameter;
 import org.cboard.dataprovider.annotation.ProviderName;
 import org.cboard.dataprovider.annotation.QueryParameter;
-import org.cboard.dataprovider.config.*;
+import org.cboard.dataprovider.config.AggConfig;
+import org.cboard.dataprovider.config.ConfigComponent;
+import org.cboard.dataprovider.config.DimensionConfig;
 import org.cboard.dataprovider.result.AggregateResult;
 import org.cboard.dataprovider.util.DPCommonUtils;
 import org.cboard.dataprovider.util.SqlHelper;
@@ -63,6 +65,18 @@ public class KylinDataProvider extends DataProvider implements Aggregatable, Ini
 
     private KylinModel kylinModel;
     private SqlHelper sqlHelper;
+
+    @Override
+    public int resultCount(Map<String, String> dataSource, Map<String, String> query) throws Exception {
+        //这个用不到，仅仅是位0.2版本的代码服务add by wbc
+        return 0;
+    }
+
+    @Override
+    public String[][] getData(Map<String, String> dataSource, Map<String, String> query) throws Exception {
+        //这个用不到，仅仅是位0.2版本的代码服务add by wbc
+        return new String[0][];
+    }
 
     private String getKey(Map<String, String> dataSource, Map<String, String> query) {
         return Hashing.md5().newHasher().putString(JSONObject.toJSON(dataSource).toString() + JSONObject.toJSON(query).toString(), Charsets.UTF_8).hash().toString();
@@ -142,7 +156,7 @@ public class KylinDataProvider extends DataProvider implements Aggregatable, Ini
                             return true;
                         }
                     });
-            whereStr =  sqlHelper.assembleFilterSql(filterHelpers);
+            whereStr = sqlHelper.assembleFilterSql(filterHelpers);
         }
         fsql = "SELECT %s FROM %s %s %s GROUP BY %s ORDER BY %s";
         exec = String.format(fsql, columnAliasName, tableName, kylinModel.getTableAlias(tableName), whereStr, columnAliasName, columnAliasName);

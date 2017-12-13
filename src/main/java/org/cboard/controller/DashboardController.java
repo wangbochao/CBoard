@@ -49,6 +49,9 @@ import java.util.stream.Collectors;
 public class DashboardController extends BaseController {
 
     @Autowired
+    private CachedDataProviderService cachedDataProviderService;
+
+    @Autowired
     private BoardDao boardDao;
 
     @Autowired
@@ -411,5 +414,20 @@ public class DashboardController extends BaseController {
         response.setStatus(500);
         LOG.error("Gloal exception Handler", ex);
         return new ServiceStatus(ServiceStatus.Status.Fail, ex.getMessage());
+    }
+    //从缓存中获取相应表的数据
+    @RequestMapping(value = "/getCachedData")
+    public DataProviderResult getCachedData(
+            @RequestParam(name = "datasourceId", required = false) Long datasourceId,
+            @RequestParam(name = "query", required = false) String query,
+            @RequestParam(name = "datasetId", required = false) Long datasetId,
+            @RequestParam(name = "reload", required = false, defaultValue = "false") Boolean reload) {//是否重新加载（true：从数据库中获取数据；false：从redis缓存中获取8）
+        Map<String, String> strParams = null;//value存放的是sql
+        if (query != null) {
+            JSONObject queryO = JSONObject.parseObject(query);
+            strParams = Maps.transformValues(queryO, Functions.toStringFunction());
+        }
+        DataProviderResult result = cachedDataProviderService.getData(datasourceId, strParams, datasetId, reload);
+        return result;
     }
 }
