@@ -87,7 +87,7 @@ cBoard.controller('dashboardViewCtrl', function ($timeout, $rootScope, $scope, $
             chartService.render(content, injectFilter(w.widget).data, optionFilter, scope, reload).then(function (d) {
                 w.realTimeTicket = d;
                 w.loading = false;
-            });
+            })
             w.realTimeOption = {optionFilter: optionFilter, scope: scope};
         };
         w.modalRender = function (content, optionFilter, scope) {

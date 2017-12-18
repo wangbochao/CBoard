@@ -34,10 +34,18 @@ cBoard.service('chartFunnelService', function () {
                 label: {
                     normal: {
                         formatter: function (params) {
-                            return params.value + "\n" + params.data.percent + "%";
+                            if(params.data.percent!=100)
+                            return params.value + "\n"+params.data.percent + "%"+"\n"+params.data.percentForNext+"%";
+                            else
+                                return params.value
                         },
-                        show: true,
-                        position: 'inside'
+                        show: true
+                        //position: 'inside'
+                    }
+                },
+                labelLine:{
+                    normal:{
+                        length:30
                     }
                 },
                 data: []
@@ -52,10 +60,17 @@ cBoard.service('chartFunnelService', function () {
                 return Number(d[i]);
             })[i];
             for (var d = 0; d < string_values.length; d++) {
+
+                var nextD,percentForNext=100;
+                if(d>0){
+                    nextD=aggregate_data[d-1][i];
+                    percentForNext=(aggregate_data[d][i] / nextD * 100).toFixed(2)
+                }
                 s.data.push({
                     name: string_values[d],
                     value: aggregate_data[d][i],
-                    percent: (aggregate_data[d][i] / m * 100).toFixed(2)
+                    percent: (aggregate_data[d][i] / m * 100).toFixed(2),
+                    percentForNext: percentForNext
                 });
             }
             series.push(s);
@@ -69,7 +84,7 @@ cBoard.service('chartFunnelService', function () {
             tooltip: {
                 trigger: 'item',
                 formatter: function (params) {
-                    return params.seriesName + " <br/>" + params.name + " : " + params.value + "<br>" + params.data.percent + "%";
+                    return params.seriesName + " <br/>" + params.name + " : " + params.value + "<br>与第一级的转化率：" + params.data.percent + "%<br>与上一级的转化率：" + params.data.percentForNext + "%";
                 }
             },
             toolbox: false,

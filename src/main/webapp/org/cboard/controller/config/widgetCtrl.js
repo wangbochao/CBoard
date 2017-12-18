@@ -213,7 +213,7 @@ cBoard.controller('widgetCtrl', function ($scope, $stateParams, $http, $uibModal
                     };
                     $scope.expAceOpt = expEditorOptions(selects, aggregate);
                     $scope.addToken = function (str, agg) {
-                        var tc = document.getElementById("expression_area");
+                        var tc = document.getElementById("expression_area1");
                         var tclen = $scope.data.expression.length;
                         tc.focus();
                         var selectionIdx = 0;
@@ -225,14 +225,33 @@ cBoard.controller('widgetCtrl', function ($scope, $stateParams, $http, $uibModal
                             var a = $scope.data.expression.substr(0, tc.selectionStart);
                             var b = $scope.data.expression.substring(tc.selectionStart, tclen);
                             $scope.data.expression = a + str;
-                            selectionIdx = $scope.data.expression.length - 1;
                             $scope.data.expression += b;
+                            selectionIdx = $scope.data.expression.length - 1;
                         }
                         if (!agg) {
                             selectionIdx++;
                         }
                         tc.selectionStart = selectionIdx;
                         tc.selectionEnd = selectionIdx;
+                    };
+
+                    $scope.addToken1=function (str) {
+                        var obj = document.getElementById('expression_area1');
+                        if (document.selection) { //ie
+                            obj.focus();
+                            document.selection.createRange().text = str;
+                        } else if (typeof obj.selectionStart === 'number' && typeof obj.selectionEnd === 'number') { //非ie
+                            var startPos = obj.selectionStart,
+                                endPos = obj.selectionEnd,
+                                cursorPos = startPos,
+                                tmpStr = obj.value;
+                            obj.value = tmpStr.substring(0, startPos) + str + tmpStr.substring(endPos, tmpStr.length);
+                            cursorPos += str.length;
+                            obj.selectionStart = obj.selectionEnd = cursorPos;
+                        } else {
+                            obj.value += str;
+                        }
+                        $scope.data.expression=obj.value;
                     };
                     $scope.verify = function () {
                         $scope.alerts = [];
@@ -593,8 +612,10 @@ cBoard.controller('widgetCtrl', function ($scope, $stateParams, $http, $uibModal
         };
 
         $scope.preview = function () {
+
             cleanPreview();
             $scope.loadingPre = true;
+            $('#preview_widget').attr("w",$('#preview_widget').width());
             chartService.render($('#preview_widget'), {
                 config: $scope.curWidget.config,
                 datasource: $scope.datasource ? $scope.datasource.id : null,

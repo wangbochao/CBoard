@@ -635,7 +635,9 @@ cBoard.service('dataService', function ($http, $q, updateService) {
     var castSeriesData = function (series, group, castedKeys, newData, iterator) {
         switch (series.type) {
             case 'exp':
+                console.log("series.exp")
                 var runExp = compileExp(series.exp);
+                console.log("series.exp="+runExp);
                 for (var i = 0; i < castedKeys.length; i++) {
                     iterator(runExp(newData[group], castedKeys[i].join('-')), i);
                 }
@@ -649,9 +651,17 @@ cBoard.service('dataService', function ($http, $q, updateService) {
     };
 
     var compileExp = function (exp) {
-        var parseredExp = parserExp(exp);
+        　
+        var parseredExp = parserExp(exp.replace("／","/"));
         return function (groupData, key) {
+           // debugger;
             var _names = parseredExp.names;
+            // parseredExp.evalExp.replace(/\//g,"／");
+            // var arr=parseredExp.evalExp.split('／');
+            // if(arr.length==2)
+            // return eval(arr[0])/eval(arr[1]);
+            // else
+            //     return 0;
             return eval(parseredExp.evalExp);
         };
     };

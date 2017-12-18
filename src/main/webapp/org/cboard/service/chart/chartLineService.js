@@ -7,7 +7,6 @@ cBoard.service('chartLineService', function () {
     this.render = function (containerDom, option, scope, persist) {
         return new CBoardEChartRender(containerDom, option).chart(null, persist);
     };
-
     this.parseOption = function (data) {
 
         var chartConfig = data.chartConfig;
@@ -54,13 +53,18 @@ cBoard.service('chartLineService', function () {
         }
 
         var valueAxis = angular.copy(chartConfig.values);
+        valueAxis.forEach(function (item) {
+            item.min=0;
+        });
         _.each(valueAxis, function (axis, index) {
             axis.axisLabel = {
                 formatter: function (value) {
                     return numbro(value).format("0a.[0000]");
                 }
             };
+           // console.log("axis.series_type"+axis.series_type)
             if (axis.series_type == "percentbar") {
+              //  console.log("axis.series_type"+axis.series_type)
                 axis.min = 0;
                 axis.max = 100;
             }
@@ -127,7 +131,8 @@ cBoard.service('chartLineService', function () {
         if (chartConfig.valueAxis === 'vertical' && chartConfig.values.length > 1) {
             basicOption.grid.right = 40;
         }
-
+     //   debugger;
+       // echartOption.xAxis[0].min=1;
         return $.extend(true, {}, echartOption, basicOption);
     };
 });

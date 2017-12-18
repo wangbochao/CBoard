@@ -64,6 +64,36 @@ angular.module('cBoard').config(['$stateProvider', function ($stateProvider) {
             templateUrl: 'org/cboard/view/config/dataset.html',
             controller: 'datasetCtrl'
         })
+        .state('config.customFunnel', {
+            url: '/customFunnel',
+            templateUrl: 'org/cboard/view/config/customFunnel.html',
+            controller: 'customFunnelCtrl'
+        })
+        .state('config.newfunnel', {
+            url: '/newfunnel',
+            templateUrl: 'org/cboard/view/config/newfunnel.html',
+            controller: 'newfunnelCtrl'
+        })
+        .state('config.route', {
+            url: '/route',
+            templateUrl: 'org/cboard/view/config/route.html',
+            controller: 'routeCtrl'
+        })
+        .state('config.newroute', {
+            url: '/newroute',
+            templateUrl: 'org/cboard/view/config/newroute.html',
+            controller: 'newfunnelCtrl'
+        })
+        .state('config.path_analysis', {
+            url: '/event',
+            templateUrl: 'org/cboard/view/config/path_analysis.html',
+            controller: 'path_analysis'
+        })
+        .state('config.routeAnalysis',{
+            url: '/routeAnalysis',
+            templateUrl: 'org/cboard/view/config/routeAnalysis.html',
+            controller: 'routeAnalysisCtrl'
+        })
         .state('config.job', {
             url: '/job',
             templateUrl: 'org/cboard/view/config/job.html',

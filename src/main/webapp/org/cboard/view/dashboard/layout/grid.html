@@ -1,4 +1,5 @@
 <!-- Content Wrapper. Contains page content -->
+
 <section class="content-header">
     <h1>
         <div ng-show="loading"><i class="fa fa-spinner fa-spin"></i> {{"COMMON.LOADING" | translate}}</div>
@@ -23,16 +24,17 @@
                 <span><i class="fa fa-refresh"></i>&nbsp;{{"COMMON.REFRESH" | translate}}</span>
             </button>
         </div>
-        <div style="display: inline-block" ng-click="export(true)">
-            <button class="btn btn-primary btn-sm">
-                <span ng-show="!exportStatus"><i class="fa fa-download" ></i>&nbsp;{{"COMMON.EXPORT" | translate}}</span>
-                <span ng-show="exportStatus"><i class="fa fa-spinner fa-spin"></i> Loading</span>
-            </button>
-        </div>
+        <!--<div style="display: inline-block" ng-click="export(true)">-->
+            <!--<button class="btn btn-primary btn-sm">-->
+                <!--<span ng-show="!exportStatus"><i class="fa fa-download" ></i>&nbsp;{{"COMMON.EXPORT" | translate}}</span>-->
+                <!--<span ng-show="exportStatus"><i class="fa fa-spinner fa-spin"></i> Loading</span>-->
+            <!--</button>-->
+        <!--</div>-->
     </div>
 </section>
-<div id="inner-container" class="content">
-    <div class="row" ng-repeat="row in board.layout.rows track by $index" ng-style="{height:row.height+'px'}">
+<div id="inner-container" class="content" style="margin-top: 15px;">
+    <div class="row" ng-repeat="row in board.layout.rows track by $index">
+    <!--<div class="row" ng-repeat="row in board.layout.rows track by $index" ng-style="{height:row.height+'px'}">-->
         <ng-switch on="row.type">
             <div ng-switch-when="param">
                 <div class="col-sm-12">
@@ -50,7 +52,12 @@
                                 <div style="min-height: 35px;height: auto;padding: 0px">
                                     <div class="row">
                                         <div ng-repeat="param in row.params | filter:{paramType:'selector'}:true" ng-controller="paramCtrl" ng-init="init()">
+                                            <div ng-if="param.name.indexOf('日期')>=0||param.name.indexOf('时间')>=0">
+                                                <ng-include src="'org/cboard/view/dashboard/param/selectorDate.html'" style="float: left"/>
+                                            </div>
+                                            <div ng-if="param.name.indexOf('日期')<0&&param.name.indexOf('时间')<0">
                                             <ng-include src="'org/cboard/view/dashboard/param/selector.html'" style="float: left"/>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row">
