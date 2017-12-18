@@ -24,6 +24,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="plugins/jQueryUI/theme.css">
     <link rel="stylesheet" href="plugins/jQueryUI/jquery-ui.css">
 
+
+
+    <!--COOCAA BI自定义样式-->
+    <link rel="stylesheet" href="dist/css/custom.css">
+    <!--新建路径-->
+    <link rel="stylesheet" href="dist/css/skins/addPath.css">
+
     <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
           page. However, you can choose any other skin. Make sure you
           apply the skin class to the body tag so the changes take effect.
@@ -79,10 +86,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="plugins/rzslider/rzslider.min.css">
     <script src="plugins/rzslider/rzslider.min.js"></script>
 
-    <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
-    <script src="plugins/daterangepicker/moment.js"></script>
-    <script src="plugins/daterangepicker/daterangepicker.js"></script>
-    <script src="lib/angular-daterangepicker.min.js"></script>
+    <!--<link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">-->
+    <!--<script src="plugins/daterangepicker/moment.js"></script>-->
+    <!--<script src="plugins/daterangepicker/daterangepicker.js"></script>-->
+    <!--<script src="lib/angular-daterangepicker.min.js"></script>-->
     <link rel="stylesheet" href="css/angular-cron-jobs.min.css">
     <script src="lib/angular-cron-jobs.min.js"></script>
 
@@ -155,9 +162,15 @@ desired effect
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-        <ui-view>
+        <!--<ui-view>-->
 
-        </ui-view>
+        <!--</ui-view>-->
+
+        <section ui-view class="content">
+
+
+
+        </section>
         <!-- Content Header (Page header) -->
         <!--<section class="content-header">-->
         <!--<h1>-->
@@ -208,6 +221,38 @@ desired effect
 <script src="org/cboard/controller/dashboard/paramCtrl.js"></script>
 <script src="org/cboard/controller/config/shareResCtrl.js"></script>
 <script src="org/cboard/controller/utils/paramSelector.js"></script>
+
+
+
+
+
+<!--漏斗-路径-分析-->
+<script src="org/cboard/controller/config/customFunnelCtrl.js"></script>
+<script src="org/cboard/controller/config/eventCtrl.js"></script>
+
+
+<!--<link rel="stylesheet" href="dist/css/skins/daterangepicker.min.css">-->
+<link rel="stylesheet" href="dist/css/skins/daterangepickerO.css">
+<link rel="stylesheet" href="dist/css/bootstrap.min.css">
+
+<script src="dist/js/route/angular-messages.min.js"></script>
+<!--<script src="dist/js/route/moment.min.js"></script>-->
+<!--<script src="dist/js/route/daterangepicker.min.js"></script>-->
+<script src="dist/js/route/momentO.js"></script>
+<script src="dist/js/route/daterangepickerO.js"></script>
+<script src="dist/js/route/angular-daterangepicker.min.js"></script>
+<!--<script src="dist/js/route/echarts-all-3.js"></script>-->
+
+
+<!--路径分析-->
+<script src="org/cboard/controller/config/routeCtrl.js?id=2"></script>
+<script src="org/cboard/controller/config/newrouteCtrl.js"></script>
+<script src="org/cboard/controller/config/newfunnelCtrl.js"></script>
+
+
+
+
+
 
 <script src="org/cboard/service/dashboard/dashboardService.js"></script>
 <script src="org/cboard/service/dashboard/freeLayoutService.js"></script>
@@ -276,12 +321,14 @@ desired effect
                     </button>
                     <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                     </button>
-                    <button type="button" class="btn btn-box-tool" ng-click="modalTable(widget)"><i
-                            class="fa fa-square-o"></i>
-                    </button>
+                    <!--<button type="button" class="btn btn-box-tool" ng-click="modalTable(widget)"><i-->
+                            <!--class="fa fa-square-o"></i>-->
+                    <!--</button>-->
                 </div>
             </div>
-            <div class="box-body" ng-style="{height:myheight+'px'}">
+            <!--<div class="box-body" ng-style="{height:myheight+'px'}">-->
+            <!--</div>-->
+            <div class="box-body">
             </div>
         </div>
     </div>
