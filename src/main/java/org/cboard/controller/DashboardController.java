@@ -42,6 +42,9 @@ import java.util.stream.Collectors;
 public class DashboardController {
 
     @Autowired
+    private CachedDataProviderService cachedDataProviderService;
+
+    @Autowired
     private BoardDao boardDao;
 
     @Autowired
@@ -198,6 +201,7 @@ public class DashboardController {
         return boardService.delete(userid, id);
     }
 
+    //获取看板的数据（看板档案的数据+看板的布局）
     @RequestMapping(value = "/getBoardData")
     public ViewDashboardBoard getBoardData(@RequestParam(name = "id") Long id) {
         return boardService.getBoardData(id);
@@ -283,8 +287,15 @@ public class DashboardController {
         return datasourceService.checkDatasource(authenticationService.getCurrentUser().getUserId(), id);
     }
 
+    //获取去重后的查询条件（0.2版本的这件事儿是前端来做的，现在由后端来做）
     @RequestMapping(value = "/getDimensionValues")
-    public String[] getDimensionValues(@RequestParam(name = "datasourceId", required = false) Long datasourceId, @RequestParam(name = "query", required = false) String query, @RequestParam(name = "datasetId", required = false) Long datasetId, @RequestParam(name = "colmunName", required = true) String colmunName, @RequestParam(name = "cfg", required = false) String cfg, @RequestParam(name = "reload", required = false, defaultValue = "false") Boolean reload) {
+    public String[] getDimensionValues(//
+                                       @RequestParam(name = "datasourceId", required = false) Long datasourceId,//数据源
+                                       @RequestParam(name = "query", required = false) String query,//查询条件
+                                       @RequestParam(name = "datasetId", required = false) Long datasetId,//数据集
+                                       @RequestParam(name = "colmunName", required = true) String colmunName, //列名
+                                       @RequestParam(name = "cfg", required = false) String cfg,
+                                       @RequestParam(name = "reload", required = false, defaultValue = "false") Boolean reload) {
         Map<String, String> strParams = null;
         if (query != null) {
             JSONObject queryO = JSONObject.parseObject(query);
@@ -309,6 +320,7 @@ public class DashboardController {
         return dataProviderService.getColumns(datasourceId, strParams, datasetId, reload);
     }
 
+    //获取数据
     @RequestMapping(value = "/getAggregateData")
     public AggregateResult getAggregateData(@RequestParam(name = "datasourceId", required = false) Long datasourceId, @RequestParam(name = "query", required = false) String query, @RequestParam(name = "datasetId", required = false) Long datasetId, @RequestParam(name = "cfg") String cfg, @RequestParam(name = "reload", required = false, defaultValue = "false") Boolean reload) {
         Map<String, String> strParams = null;
@@ -379,6 +391,10 @@ public class DashboardController {
 
     @RequestMapping(value = "/tableToxls")
     public ResponseEntity<byte[]> tableToxls(@RequestParam(name = "data") String data) {
+        //modified by wbc start 2017-07-14 start（不让纵向的数据进行合并）
+        data = data.replace("column_key", "data");
+//        data = data.replace("\"rowSpan\":\"row_null\",","");//这一行不需要
+        //modified by wbc start 2017-07-14 end
         HSSFWorkbook wb = xlsProcessService.tableToxls(JSONObject.parseObject(data));
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
@@ -425,4 +441,21 @@ public class DashboardController {
         response.setStatus(500);
         return new ServiceStatus(ServiceStatus.Status.Fail, ex.getMessage());
     }
+
+    //从缓存中获取相应表的数据
+    @RequestMapping(value = "/getCachedData")
+    public DataProviderResult getCachedData(
+            @RequestParam(name = "datasourceId", required = false) Long datasourceId,
+            @RequestParam(name = "query", required = false) String query,
+            @RequestParam(name = "datasetId", required = false) Long datasetId,
+            @RequestParam(name = "reload", required = false, defaultValue = "false") Boolean reload) {//是否重新加载（true：从数据库中获取数据；false：从redis缓存中获取8）
+        Map<String, String> strParams = null;//value存放的是sql
+        if (query != null) {
+            JSONObject queryO = JSONObject.parseObject(query);
+            strParams = Maps.transformValues(queryO, Functions.toStringFunction());
+        }
+        DataProviderResult result = cachedDataProviderService.getData(datasourceId, strParams, datasetId, reload);
+        return result;
+    }
+
 }
