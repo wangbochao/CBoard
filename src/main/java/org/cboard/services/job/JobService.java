@@ -1,6 +1,8 @@
 package org.cboard.services.job;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.diamond.client.PropertiesConfiguration;
+import com.github.diamond.client.PropertiesConfigurationFactoryBean;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.cboard.dao.JobDao;
 import org.cboard.dto.ViewDashboardJob;
@@ -10,12 +12,9 @@ import org.cboard.services.ServiceStatus;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +29,9 @@ import java.util.TimeZone;
  */
 @Service
 public class JobService implements InitializingBean {
+
+    //配置服务器定义
+    private static PropertiesConfiguration config = PropertiesConfigurationFactoryBean.getPropertiesConfiguration();
 
     @Autowired
     private SchedulerFactoryBean schedulerFactoryBean;

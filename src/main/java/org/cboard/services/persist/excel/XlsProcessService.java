@@ -58,7 +58,7 @@ public class XlsProcessService {
         context.setR1(0);
         context.setR2(0);
         context.setData(data);
-        new TableXlsProcesser().drawContent(context);
+        new TableXlsProcesser().drawContent(context);//这里面有合并单元格的代码
         setAutoWidth(sheet);
         return wb;
     }

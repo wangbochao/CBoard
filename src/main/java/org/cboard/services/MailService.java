@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.mail.Authenticator;
 import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -52,10 +51,16 @@ public class MailService {
     @Value("${mail.smtp.ssl.checkserveridentity:false}")
     private Boolean mail_smtp_ssl_check;
 
+    //jdk1.8遍历List的方法
     private Function<Object, PersistContext> getPersistBoard(List<PersistContext> persistContextList) {
         return e -> persistContextList.stream()
-                .filter(board -> board.getDashboardId() == ((JSONObject) e).getLong("id"))
-                .findFirst().get();
+//                .filter(board -> board.getDashboardId() == ((JSONObject) e).getLong("id"))
+                .filter(board ->
+                        board.getDashboardId().equals(
+                                ((JSONObject) e).getLong("id")
+                        )
+                )
+                .findFirst().get();//获取第一条数据（即dashboardId = ((JSONObject) e).getLong("id")）
     }
 
     public String sendDashboard(DashboardJob job) throws Exception {
@@ -64,7 +69,7 @@ public class MailService {
         List<PersistContext> persistContextList = config.getJSONArray("boards").stream()
                 .map(e -> persistService.persist(((JSONObject) e).getLong("id"), job.getUserId()))
                 .collect(Collectors.toList());
-
+        //通过这种方式可以遍历json
         List<PersistContext> workbookList = config.getJSONArray("boards").stream()
                 .filter(e -> ((JSONObject) e).getString("type").contains("xls"))
                 .map(getPersistBoard(persistContextList))

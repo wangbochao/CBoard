@@ -17,6 +17,7 @@ import org.cboard.exception.CBoardException;
 import org.cboard.pojo.DashboardDataset;
 import org.cboard.pojo.DashboardDatasource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
@@ -34,6 +35,36 @@ public class DataProviderService {
 
     @Autowired
     private DatasetDao datasetDao;
+
+    private int resultLimit=300000;//设置为30w，否则前段界面渲染时会崩溃
+
+    //根据数据源，sql获取相应的数据（返回的结果其实是二维数组）
+    public DataProviderResult getData(Long datasourceId, Map<String, String> query, Long datasetId) {
+        String[][] dataArray = null;
+        int resultCount = 0;
+        String msg = "1";
+
+        if (datasetId != null) {
+            Dataset dataset = getDataset(datasetId);//数据源+sql封装类
+            datasourceId = dataset.getDatasourceId();//获取数据源id
+            query = dataset.getQuery();//获取sql
+        }
+        DashboardDatasource datasource = datasourceDao.getDatasource(datasourceId);
+        try {
+            JSONObject config = JSONObject.parseObject(datasource.getConfig());//获取数据库的配置信息
+            DataProvider dataProvider = DataProviderManager.getDataProvider(datasource.getType());
+            Map<String, String> parameterMap = Maps.transformValues(config, Functions.toStringFunction());
+            resultCount = dataProvider.resultCount(parameterMap, query);//先判断需要的数据的个数
+            if (resultCount > resultLimit) {//数据上线30w条，否则不从数据加载数据
+                msg = "Cube result count is " + resultCount + ", greater than limit " + resultLimit;
+            } else {
+                dataArray = dataProvider.getData(parameterMap, query);
+            }
+        } catch (Exception e) {
+            msg =  e.getMessage();
+        }
+        return new DataProviderResult(dataArray, msg);
+    }
 
     private DataProvider getDataProvider(Long datasourceId, Map<String, String> query, Dataset dataset) throws Exception {
         if (dataset != null) {
@@ -79,10 +110,10 @@ public class DataProviderService {
 
     public String[] getDimensionValues(Long datasourceId, Map<String, String> query, Long datasetId, String columnName, AggConfig config, boolean reload) {
         try {
-            Dataset dataset = getDataset(datasetId);
+            Dataset dataset = getDataset(datasetId);//获取数据集信息（数据源+对应的sql）
             attachCustom(dataset, config);
-            DataProvider dataProvider = getDataProvider(datasourceId, query, dataset);
-            String[] result = dataProvider.getDimVals(columnName, config, reload);
+            DataProvider dataProvider = getDataProvider(datasourceId, query, dataset);//获取DataProvider，不同的连接方式(Jdbc连接)用的是不同的DataProvider
+            String[] result = dataProvider.getDimVals(columnName, config, reload);//获取维度列（=查询条件）对应的去重后的值
             return result;
         } catch (Exception e) {
             e.printStackTrace();

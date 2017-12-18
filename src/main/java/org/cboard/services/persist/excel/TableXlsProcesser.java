@@ -3,7 +3,9 @@ package org.cboard.services.persist.excel;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeUtil;
 
@@ -58,21 +60,31 @@ public class TableXlsProcesser extends XlsProcesser {
                 }
 
                 for (int j = colStart; j < colStart + deltaSpan; j++) {
-                    Cell cell = row.createCell(j);
+                    Cell cell = row.createCell(j);//单元格(Cell)
                     if ("header_key".equals(property) || "header_empty".equals(property)) {
                         cell.setCellStyle(context.getTableStyle());
-                    } else if ("data".equals(property)|| "column_key".equals(property)) {
+                    } else if ("data".equals(property) || "column_key".equals(property)) {
                         cell.setCellStyle(context.gettStyle());
                     }
+                    /*给单元格赋值*/
                     if (j == colStart) {
-                        if ("data".equals(property)) {
-                            if (cData.getString("data") != null && cData.getString("data").contains("%")) {
+                        if ("data".equals(property)) {//每一行数据中property元素对应的值为data时
+                            if (cData.getString("data") != null && cData.getString("data").contains("%")) {//处理带百分号的数据
                                 cell.setCellValue(cData.getDoubleValue("raw"));
-                                cell.setCellStyle(context.getPercentStyle());
+                                cell.setCellStyle(context.getPercentStyle());//设置成
                             } else {
-                                cell.setCellValue(cData.getDoubleValue("raw"));
+                                //modified by wbc start 2017-07-14 start（不让纵向的数据进行合并）
+                                String tmp = cData.getString("raw");
+                                if (tmp == null) {//表示这种数据被我改过了，所以要特殊处理（data有值，没有对应的raw）
+                                    cell.setCellValue(cData.getString("data"));
+                                } else {
+                                    cell.setCellValue(cData.getDoubleValue("raw"));
+                                }
+                                //modified by wbc start 2017-07-14 end
+//                                这个是原来的
+//                                cell.setCellValue(cData.getDoubleValue("raw"));
                             }
-                        } else {
+                        } else {//目前发现了这种值column_key（不知道还有没有其它值）
                             cell.setCellValue(cData.getString("data"));
                         }
                     }
