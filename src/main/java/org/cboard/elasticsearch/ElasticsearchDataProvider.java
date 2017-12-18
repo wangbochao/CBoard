@@ -84,6 +84,18 @@ public class ElasticsearchDataProvider extends DataProvider implements Aggregata
     }
 
     @Override
+    public int resultCount(Map<String, String> dataSource, Map<String, String> query) throws Exception {
+        //这个用不到，仅仅是位0.2版本的代码服务add by wbc
+        return 0;
+    }
+
+    @Override
+    public String[][] getData(Map<String, String> dataSource, Map<String, String> query) throws Exception {
+        //这个用不到，仅仅是位0.2版本的代码服务add by wbc
+        return new String[0][];
+    }
+
+    @Override
     public String[] queryDimVals(String columnName, AggConfig config) throws Exception {
         JSONObject request = new JSONObject();
         request.put("size", 1000);
@@ -483,6 +495,8 @@ public class ElasticsearchDataProvider extends DataProvider implements Aggregata
     public String[][] getData() throws Exception {
         return new String[0][];
     }
+
+
 
     private String getKey() {
         return Hashing.md5().newHasher().putString(JSONObject.toJSON(dataSource).toString() + JSONObject.toJSON(query).toString(), Charsets.UTF_8).hash().toString();

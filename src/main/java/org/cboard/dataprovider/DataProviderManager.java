@@ -46,7 +46,6 @@ public class DataProviderManager implements ApplicationContextAware {
     /*public static DataProvider getDataProvider(String type) throws Exception {
         return getDataProvider(type, null, null);
     }*/
-
     public static DataProvider getDataProvider(String type, Map<String, String> dataSource, Map<String, String> query) throws Exception {
         Class c = providers.get(type);
         ProviderName providerName = (ProviderName) c.getAnnotation(ProviderName.class);
@@ -63,6 +62,15 @@ public class DataProviderManager implements ApplicationContextAware {
             innerAggregator.setQuery(query);
             provider.setInnerAggregator(innerAggregator);
             return provider;
+        }
+        return null;
+    }
+
+    public static DataProvider getDataProvider(String type) throws Exception {
+        Class c = providers.get(type);
+        ProviderName providerName = (ProviderName) c.getAnnotation(ProviderName.class);
+        if (providerName.name().equals(type)) {
+            return (DataProvider) c.newInstance();
         }
         return null;
     }

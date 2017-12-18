@@ -502,4 +502,118 @@ public class JdbcDataProvider extends DataProvider implements Aggregatable, Init
         }
 
     }
+
+    public String[][] getData(Map<String, String> dataSource, Map<String, String> query) throws Exception {
+        //获取jdbc连接
+        Connection con = getConnection(dataSource);
+        //获取数据+处理结果集
+        String sql = query.get(SQL);
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<String[]> list = null;
+
+        try {
+
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            list = new LinkedList<>();
+            String[] row = new String[columnCount];
+            for (int i = 0; i < columnCount; i++) {
+                row[i] = metaData.getColumnLabel(i + 1);
+            }
+            list.add(row);
+            while (rs.next()) {
+                row = new String[columnCount];
+                for (int j = 0; j < columnCount; j++) {
+                    row[j] = rs.getString(j + 1);
+                }
+                list.add(row);
+            }
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (Exception e) {
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (Exception e) {
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (Exception e) {
+                }
+            }
+        }
+
+        return list.toArray(new String[][]{});
+    }
+
+    @Override
+    public int resultCount(Map<String, String> dataSource, Map<String, String> query) throws Exception {
+        Connection con = getConnection(dataSource);
+        StringBuffer cubeSqlBuffer = new StringBuffer();
+        String querySql = query.get(SQL).replace(";", "");
+        String driver = dataSource.get(DRIVER);
+        boolean isOracle = driver.toLowerCase().indexOf("oracle") >= 0;
+        cubeSqlBuffer.append("SELECT count(*) AS cnt FROM ( ")
+                .append(querySql)
+                .append(" ) ")
+                .append(isOracle ? "" : " AS ")
+                .append("cube_query__");
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int count = 0;
+
+        try {
+            ps = con.prepareStatement(cubeSqlBuffer.toString());
+            rs = ps.executeQuery();
+            rs.next();
+            count = rs.getInt("cnt");
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (Exception e) {
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (Exception e) {
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (Exception e) {
+                }
+            }
+        }
+        return count;
+    }
+
+    private Connection getConnection(Map<String, String> dataSource) throws Exception {
+        String driver = dataSource.get(DRIVER);
+        String jdbcurl = dataSource.get(JDBC_URL);
+        //修改了下面的内容，为了防止当有些账号不输入密码时，password不能为null需要给个""，否则报空指针异常
+        String username = dataSource.get(USERNAME);
+        String password = dataSource.get(PASSWORD);
+
+
+        Class.forName(driver);
+        Properties props = new Properties();
+        props.setProperty("user", username);
+        props.setProperty("password", password);
+
+        return DriverManager.getConnection(jdbcurl, props);
+    }
+
 }

@@ -57,7 +57,7 @@ public class JvmAggregator extends InnerAggregator {
     public void loadData(String[][] data, long interval) {
         rawDataCache.put(getCacheKey(), data, interval * 1000);
     }
-
+    //从缓存中获取维度并且去重，这个做法很好，用的是1.8的新特性
     public String[] queryDimVals(String columnName, AggConfig config) throws Exception {
         String[][] data = rawDataCache.get(getCacheKey());
         Map<String, Integer> columnIndex = getColumnIndex(data);

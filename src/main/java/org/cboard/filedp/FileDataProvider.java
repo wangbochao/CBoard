@@ -1,5 +1,6 @@
 package org.cboard.filedp;
 
+import org.apache.commons.lang.StringUtils;
 import org.cboard.dataprovider.DataProvider;
 import org.cboard.dataprovider.annotation.DatasourceParameter;
 import org.cboard.dataprovider.annotation.ProviderName;
@@ -7,15 +8,18 @@ import org.cboard.dataprovider.annotation.QueryParameter;
 import org.cboard.exception.CBoardException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import static java.util.stream.Collectors.*;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Created by zyong on 2017/2/4.
@@ -39,6 +43,18 @@ public class FileDataProvider extends DataProvider {
     private String QUERY_PARAM_SEPRATOR = "seprator";
     @QueryParameter(label = "{{'DATAPROVIDER.TEXTFILE.ENCLOSURE'|translate}}", type = QueryParameter.Type.Input, order = 4)
     private String QUERY_PARAM_ENCLOSURE = "enclosure";
+
+    @Override
+    public int resultCount(Map<String, String> dataSource, Map<String, String> query) throws Exception {
+        //这个用不到，仅仅是位0.2版本的代码服务add by wbc
+        return 0;
+    }
+
+    @Override
+    public String[][] getData(Map<String, String> dataSource, Map<String, String> query) throws Exception {
+        //这个用不到，仅仅是位0.2版本的代码服务add by wbc
+        return new String[0][];
+    }
 
     @Override
     public boolean doAggregationInDataSource() {
