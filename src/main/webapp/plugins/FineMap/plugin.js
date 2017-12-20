@@ -118,6 +118,17 @@ var threeLevelMap = {
         }
         return color;
     },
+    tipData1:function (data, name) {//add by wanghaihua
+        debugger;
+        var d=data.filter(function(a,index){
+            return a[0].data==name
+        });
+        var str='';
+        for(var i=0;i<data[0].length;i++){
+            str+=data[0][i].data+":"+d[0][i].data+"</br>";
+        }
+        return str;
+    },
     tipData: function(data, name) {
         var rowHeaderLength = 0,
             columnHeaderLength = 0,
@@ -276,7 +287,8 @@ var threeLevelMap = {
                     backColor = d3.select(this).attr("fill");
                     d3.select(this)
                         .attr("fill", overColor);
-                    var tipString = that.tipData(options.data, nameNode) ? that.tipData(options.data, nameNode) : nameNode;
+                    var tipString = that.tipData1(options.data, nameNode) ? that.tipData1(options.data, nameNode) : nameNode;
+                    //debugger;
                     tip.html(tipString);
                     tip.show();
                 })
