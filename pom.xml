@@ -18,6 +18,12 @@
         <presto.version>0.161</presto.version>
     </properties>
     <dependencies>
+        <!--统一配置管理服务SuperDiamond-->
+        <dependency>
+            <groupId>com.github.diamond</groupId>
+            <artifactId>super-diamond-client</artifactId>
+            <version>1.1.0</version>
+        </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
@@ -166,11 +172,7 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.29</version>
         </dependency>
-        <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>sqljdbc4</artifactId>
-            <version>4.0</version>
-        </dependency>
+
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
